@@ -1,0 +1,16 @@
+{
+  "name": "aws-cloudformation",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "make-bucket": "node scripts/make-bucket.js",
+    "package": "node scripts/package.js",
+    "deploy": "node scripts/deploy.js",
+    "package-deploy": "npm run package && npm run deploy",
+    "pd": "npm run package-deploy",
+    "delete": "node scripts/delete.js"
+  },
+  "dependencies": {
+    "dotenv": "^4.0.0"
+  }
+}

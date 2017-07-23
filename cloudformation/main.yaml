@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  NamePrefix:
+    Type: String
+
+Resources:
+  myVpcStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: "./vpc.yaml"
+      Parameters:
+        NamePrefix: !Sub "${NamePrefix}-VPC"
+      Tags:
+        - Key: "Name"
+          Value: !Sub "${NamePrefix}-VPC-Stack"
+
+  lambadStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: "./lambda.yaml"
+      Parameters:
+        NamePrefix: !Sub "${NamePrefix}-Lambda"
+        SubnetId: !GetAtt myVpcStack.Outputs.SubnetId
+        SecurityGroupId: !GetAtt myVpcStack.Outputs.SecurityGroupId
+      Tags:
+        - Key: "Name"
+          Value: !Sub "${NamePrefix}-Lambda-Stack"
