@@ -1,20 +1,28 @@
 const dotenv = require("dotenv");
-const child_process = require("child_process");
+const { spawn: childProcessSpawn } = require("child_process");
 
 const { parsed: env } = dotenv.load({
 	path: ".env",
 });
 
-function exec(command) {
-	child_process.exec(command, (error, stdout, stderr) => {
-		console.log("stdout: " + stdout);
-		console.log("stderr: " + stderr);
-		if (error !== null) {
-			console.log("exec error: " + error);
-		}
+function spawn(command, args = []) {
+	const childProcess = childProcessSpawn(command, args);
+
+	childProcess.stdout.setEncoding('utf8');
+	childProcess.stdout.on('data', (data) => {
+		process.stdout.write(data);
+	});
+
+	childProcess.stderr.setEncoding('utf8');
+	childProcess.stderr.on('data', (data) => {
+		process.stderr.write(data);
+	});
+
+	childProcess.on('close', (code) => {
+		console.log(`\nComplete! (code: ${code})`);
 	});
 }
 
 
 module.exports.env = env;
-module.exports.exec = exec;
+module.exports.spawn = spawn;
