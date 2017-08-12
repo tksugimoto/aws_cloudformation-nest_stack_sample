@@ -8,15 +8,8 @@ const { parsed: env } = dotenv.load({
 function spawn(command, args = []) {
 	const childProcess = childProcessSpawn(command, args);
 
-	childProcess.stdout.setEncoding('utf8');
-	childProcess.stdout.on('data', (data) => {
-		process.stdout.write(data);
-	});
-
-	childProcess.stderr.setEncoding('utf8');
-	childProcess.stderr.on('data', (data) => {
-		process.stderr.write(data);
-	});
+	childProcess.stdout.pipe(process.stdout);
+	childProcess.stderr.pipe(process.stderr);
 
 	childProcess.on('close', (code) => {
 		console.log(`\nComplete! (code: ${code})`);
